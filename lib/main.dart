@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voice_assistant_with_chatgpt/home_page.dart';
+import 'package:voice_assistant_with_chatgpt/pallete.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +13,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      debugShowCheckedModeBanner: false,
+      title: 'Voice Assistant',
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Pallete.whiteColor,
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Pallete.whiteColor,
+        ),
       ),
       home: const HomePage(),
     );
