@@ -63,13 +63,7 @@ class OpenAIService {
         },
         body: jsonEncode({
           "model": "gpt-3.5-turbo",
-          "messages": [
-            {
-              "role": "user",
-              "content":
-                  "Dose this message want to generate an AI picture, imgae art or anything similar? $prompt. Simply answer with a yes or no."
-            },
-          ],
+          "messages": messages,
         }),
       );
       if (res.statusCode == 200) {
@@ -90,6 +84,35 @@ class OpenAIService {
   }
 
   Future<String> dallEAPI(String prompt) async {
-    return 'DALL-E';
+    messages.add({
+      'role': 'user',
+      'content': prompt,
+    });
+    try {
+      final res = await http.post(
+        Uri.parse('https://api.openai.com/v1/images/generations'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $openAIAPIKey',
+        },
+        body: jsonEncode({
+          'prompt': prompt,
+          'n': 1,
+        }),
+      );
+      if (res.statusCode == 200) {
+        String imageUrl = jsonDecode(res.body)['data'][0]['url'];
+        imageUrl = imageUrl.trim();
+
+        messages.add({
+          'role': 'assistant',
+          'content': imageUrl,
+        });
+        return imageUrl;
+      }
+      return 'An internal error occurred';
+    } catch (e) {
+      return e.toString();
+    }
   }
 }
